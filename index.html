@@ -1,0 +1,315 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 8</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.22.0/dist/phaser.js"></script>
+	<script src="WeaponPlugin.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script type="text/javascript">
+
+   var config = {
+    type: Phaser.AUTO,
+    parent: 'phaser-example',
+    width: 800,
+    height: 600,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            fps: 60,
+            gravity: { y: 0 }
+        }
+    },
+    scene: {
+        preload: preload,
+        create: create,
+        update: update,
+		render: render
+    }
+};
+
+var barco;
+var cursors;
+var text;
+var keyObj1, keyObj2, keyObj3;  // Get key object
+var weapon;
+var fireButton;
+var opv1 = true;
+var opv2 = false;
+var helicopterohabilitado = false;
+var helicoptero;
+var game = new Phaser.Game(config);
+var text;
+var timedEvent;
+
+function preload ()
+{
+    this.load.image('bk_water2', 'recursos/bk_water2.jpg');
+	this.load.image('frontera', 'recursos/frontera.png');
+	this.load.image('costa', 'recursos/costa.png');
+    this.load.image('barco', 'recursos/barco.png');
+	this.load.image('barco2', 'recursos/barco2.png');
+	this.load.image('bullet', 'recursos/shmup-bullet.png');
+	this.load.scenePlugin('WeaponPlugin', 'WeaponPlugin.js', 'weaponPlugin', 'weapons');
+	this.load.image('heli', 'recursos/helicopter.png');
+}
+
+function create ()
+{
+	this.add.image(400, 300, 'bk_water2');
+	this.add.image(400, 300, 'frontera');
+	costa = this.physics.add.staticGroup();
+	costa.create(400, 590, 'costa');
+    barco = this.physics.add.image(100, 520, 'barco');
+	barco2 = this.physics.add.image(100, 550, 'barco2');
+	helicoptero=this.physics.add.image(100, 520, 'heli');
+	
+	
+	this.initialTime = 150; // 2:30 in seconds
+	
+	text = this.add.text(32, 32, 'Countdown: ' + formatTime(this.initialTime));
+
+    // Each 1000 ms call onEvent
+    timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
+	
+	
+	//  Creates 30 bullets, using the 'bullet' graphic
+    weapon = this.add.weapon(30, 'bullet');
+
+    //  The bullet will be automatically killed when it leaves the world bounds
+    //weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+
+    //  The speed at which the bullet is fired
+   weapon.bulletSpeed = 600;
+
+    //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+    weapon.fireRate = 100;
+	
+	
+    //  Tell the Weapon to track the 'player' Sprite
+    //  With no offsets from the position
+    //  But the 'true' argument tells the weapon to track sprite rotation
+    weapon.trackSprite(barco, 0, 0, true);
+
+    fireButton = this.input.keyboard.addKey('m');
+	
+	barco.setCollideWorldBounds(true);<!-- colisiona con los limites del mundo-->
+	barco2.setCollideWorldBounds(true);<!-- colisiona con los limites del mundo-->
+	helicoptero.setCollideWorldBounds(true);<!-- colisiona con los limites del mundo-->
+	
+	this.physics.add.collider(barco, costa);
+	this.physics.add.collider(barco2, costa);
+	this.physics.add.collider(barco, barco2);
+	this.physics.add.collider(barco, weapon.bullets);
+	this.physics.add.collider(barco2, weapon.bullets);
+	
+    barco.setDamping(true);
+    barco.setDrag(0.99);
+    barco.setMaxVelocity(20);
+	
+    barco2.setDamping(true);
+    barco2.setDrag(0.99);
+    barco2.setMaxVelocity(40);
+	
+	helicoptero.setDamping(true);
+    helicoptero.setDrag(0.99);
+    helicoptero.setMaxVelocity(80);
+
+    cursors = this.input.keyboard.createCursorKeys();
+	keyObj1 = this.input.keyboard.addKey('one');  // Get key object
+	keyObj2 = this.input.keyboard.addKey('two');  // Get key object
+	keyObj3 = this.input.keyboard.addKey('four');
+	
+  //  text = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
+}
+
+function formatTime(seconds){
+    // Minutes
+    var minutes = Math.floor(seconds/60);
+    // Seconds
+    var partInSeconds = seconds%60;
+    // Adds left zeros to seconds
+    partInSeconds = partInSeconds.toString().padStart(2,'0');
+    // Returns formated time
+    return `${minutes}:${partInSeconds}`;
+}
+
+
+function onEvent ()
+{
+    this.initialTime -= 1; // One second
+    text.setText('Countdown: ' + formatTime(this.initialTime));
+}
+
+
+function update ()
+{
+	if (keyObj1.isDown && barco.body.enable)
+	{	
+		opv1 = true;
+		opv2 = false;
+		helicopterohabilitado = false;
+	}
+	
+	if (keyObj2.isDown && barco2.body.enable)
+	{
+		opv1 = false;
+		opv2 = true;
+		helicopterohabilitado = false;
+		//this.add.text(10, 10, 'opv1=false', { font: '16px Courier', fill: '#00ff00' });
+	}
+	
+	if (keyObj3.isDown && barco.body.enable)
+	{
+		opv1 = false;
+		opv2 = false;
+		helicopterohabilitado = true;
+		//this.add.text(10, 10, 'opv1=false', { font: '16px Courier', fill: '#00ff00' });
+	}
+	
+	
+	if (opv1)
+	{
+		barco2.setAcceleration(0);
+		barco2.setAngularVelocity(0);
+		helicoptero.setAcceleration(0);
+		helicoptero.setAngularVelocity(0);
+		helicoptero.setX(barco.x);
+		helicoptero.setY(barco.y);
+		
+		if (cursors.up.isDown)
+		{
+			this.physics.velocityFromRotation(barco.rotation, 20, barco.body.acceleration);
+			
+		}
+		else
+		{
+			barco.setAcceleration(0);
+		}
+
+		if (cursors.left.isDown)
+		{
+			barco.setAngularVelocity(-30);
+		}
+		else if (cursors.right.isDown)
+		{
+			barco.setAngularVelocity(30);
+		}
+		else
+		{
+			barco.setAngularVelocity(0);
+		}
+	
+		if (fireButton.isDown)
+		{
+        weapon.fire();
+		}
+	
+		//game.world.wrap(barco, 16);
+	
+	}
+	
+	if (opv2)
+	{
+		barco.setAcceleration(0);
+		barco.setAngularVelocity(0);
+		helicoptero.setAcceleration(0);
+		helicoptero.setAngularVelocity(0);
+		helicoptero.setX(barco.x);
+		helicoptero.setY(barco.y);
+		
+		if (cursors.up.isDown)
+		{
+			this.physics.velocityFromRotation(barco2.rotation, 20, barco2.body.acceleration);
+		}
+		else
+		{
+			barco2.setAcceleration(0);
+		}
+
+		if (cursors.left.isDown)
+		{
+			barco2.setAngularVelocity(-30);
+		}
+		else if (cursors.right.isDown)
+		{
+			barco2.setAngularVelocity(30);
+		}
+		else
+		{
+			barco2.setAngularVelocity(0);
+		}
+	
+	}
+	
+	if (helicopterohabilitado)
+	{
+		barco.setAcceleration(0);
+		barco.setAngularVelocity(0);
+		barco2.setAcceleration(0);
+		barco2.setAngularVelocity(0);
+		
+		if (cursors.up.isDown)
+		{
+			this.physics.velocityFromRotation(helicoptero.rotation, 20, helicoptero.body.acceleration);
+			
+		}
+		else
+		{
+			helicoptero.setAcceleration(0);
+		}
+
+		if (cursors.left.isDown)
+		{
+			helicoptero.setAngularVelocity(-30);
+		}
+		else if (cursors.right.isDown)
+		{
+			helicoptero.setAngularVelocity(30);
+		}
+		else
+		{
+			helicoptero.setAngularVelocity(0);
+		}
+	
+	}
+	
+    //text.setText('Speed: ' + barco.body.speed);
+
+     
+
+    this.physics.world.wrap(barco, 32);
+	this.physics.world.wrap(barco2, 32);
+
+    // bk_water2.forEachExists(screenWrap, this);
+	function choquebarco1barco2 (barco, barco2)
+	{
+		barco2.disableBody(true, true);
+	}
+	this.physics.add.overlap(barco, barco2, choquebarco1barco2, null, this);
+	
+	function impactobala (weapon, barco2)
+	{
+		barco2.disableBody(true, true);
+	}
+	this.physics.add.overlap(weapon, barco2, impactobala, null, this);
+
+}
+
+function render() {
+
+    weapon.debug();
+
+}
+	
+	</script>
+
+</body>
+</html>
