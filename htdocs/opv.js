@@ -114,10 +114,29 @@ function create ()
 	green3 = this.physics.add.image(350, 100, 'green');
 	green4 = this.physics.add.image(450, 100, 'green');
 	
+	
+	//Avisos restantes a pesqueros
+	cantAvisosP1 = 300;
+	cantAvisosP2 = 300;
+	cantAvisosP3 = 300;
+	cantAvisosP4 = 300;
+	
+	
 	energiaPesquero1 = 10;
 	energiaPesquero2 = 10;
 	energiaPesquero3 = 10;
 	energiaPesquero4 = 10;
+	
+	
+	//explosion
+	var explotar = {
+        key: 'explode',
+        frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23, first: 23 }),
+        frameRate: 20
+    };
+
+    this.anims.create(explotar);
+
 	
 	helicoptero=this.physics.add.image(100, 520, 'helicoptero');
 
@@ -142,22 +161,7 @@ function create ()
 	 //radarLancha
 	 radarLancha = new Phaser.Geom.Circle(barco.x, barco.y, 30);
 	
-	//cantidad de avisos restantes a los pesqueros
-	cantAvisosP1 = 300;
-	cantAvisosP2 = 300;
-	cantAvisosP3 = 300;
-	cantAvisosP4 = 300;
 
-//explosion
-var explotar = {
-        key: 'explode',
-        frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 23, first: 23 }),
-        frameRate: 20
-    };
-
-    this.anims.create(explotar);
-
-	
 	
 	
 	
@@ -294,15 +298,150 @@ var explotar = {
 	teclaHelicoptero = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.FOUR);
 	
 	
-	
-	
-	
+
   //  text = this.add.text(10, 10, '', { font: '16px Courier', fill: '#00ff00' });
 	
+	 function impactobala1 (bullet, pesquero1)
+    {
+	boom = this.add.sprite(pesquero1.x, pesquero1.y, 'explosion');
+		boom.anims.play('explode');
+		pesquero1.disableBody(true, true);
+		green1.disableBody(true, true);
+		yellow1.disableBody(true, true);
+		red1.disableBody(true, true);
+		bullet.kill();
+		score += 10;
+		scoreText.setText('Puntuación: ' + score);
+	}
+	this.physics.add.overlap(weaponBullets, pesquero1, impactobala1, null, this);
 		
+	function impactobala2 (bullet, pesquero2)
+	{
+			
+		boom = this.add.sprite(pesquero2.x, pesquero2.y, 'explosion');
+		boom.anims.play('explode');
+		pesquero2.disableBody(true, true);
+		green2.disableBody(true, true);
+		yellow2.disableBody(true, true);
+		red2.disableBody(true, true);
+		bullet.kill();
+		score += 10;
+		scoreText.setText('Puntuación: ' + score);
+				
+	}
+	this.physics.add.overlap(weaponBullets, pesquero2, impactobala2, null, this);
 	
+	function impactobala3 (bullet, pesquero3)
+	{
+			
+		boom = this.add.sprite(pesquero3.x, pesquero3.y, 'explosion');
+		boom.anims.play('explode');
+		pesquero3.disableBody(true, true);
+		green3.disableBody(true, true);
+		yellow3.disableBody(true, true);
+		red3.disableBody(true, true);
+		bullet.kill();
+		score += 10;
+		scoreText.setText('Puntuación: ' + score);
+				
+	}
+	this.physics.add.overlap(weaponBullets, pesquero3, impactobala3, null, this);
+
+	function impactobala4 (bullet, pesquero4)
+	{
+			
+		boom = this.add.sprite(pesquero4.x, pesquero4.y, 'explosion');
+		boom.anims.play('explode');
+		pesquero4.disableBody(true, true);
+		green4.disableBody(true, true);
+		yellow4.disableBody(true, true);
+		red4.disableBody(true, true);
+		bullet.kill();
+		score += 10;
+		scoreText.setText('Puntuación: ' + score);
+				
+	}
+	this.physics.add.overlap(weaponBullets, pesquero4, impactobala4, null, this);
 	
-  }
+	function impactometralletapesquero1 (balametralleta, pesquero1)
+	{	
+		energiaPesquero1--;
+		balametralleta.kill();
+		if (energiaPesquero1 <= 0)
+		{
+			boom = this.add.sprite(pesquero1.x, pesquero1.y, 'explosion');
+			boom.anims.play('explode');
+			pesquero1.disableBody(true, true);
+			green1.disableBody(true, true);
+			yellow1.disableBody(true, true);
+			red1.disableBody(true, true);
+			score += 10;
+			scoreText.setText('Puntuación: ' + score);
+		}
+	}
+	this.physics.add.overlap(metralleta1Bullets, pesquero1, impactometralletapesquero1, null, this);
+	this.physics.add.overlap(metralleta2Bullets, pesquero1, impactometralletapesquero1, null, this);
+	textEnergia1.setText('Energia: ' + energiaPesquero1);
+
+	function impactometralletapesquero2 (balametralleta, pesquero2)
+	{	
+		energiaPesquero2--;
+		balametralleta.kill();
+		if (energiaPesquero2 <= 0)
+		{
+			boom = this.add.sprite(pesquero2.x, pesquero2.y, 'explosion');
+			boom.anims.play('explode');
+			pesquero2.disableBody(true, true);
+			green2.disableBody(true, true);
+			yellow2.disableBody(true, true);
+			red2.disableBody(true, true);
+			score += 10;
+			scoreText.setText('Puntuación: ' + score);
+		}
+	}
+	this.physics.add.overlap(metralleta1Bullets, pesquero2, impactometralletapesquero2, null, this);
+	this.physics.add.overlap(metralleta2Bullets, pesquero2, impactometralletapesquero2, null, this);
+	
+	function impactometralletapesquero3 (balametralleta, pesquero3)
+	{	
+		energiaPesquero3--;
+		balametralleta.kill();
+		if (energiaPesquero3 <= 0)
+		{
+			boom = this.add.sprite(pesquero3.x, pesquero3.y, 'explosion');
+			boom.anims.play('explode');
+			pesquero3.disableBody(true, true);
+			green3.disableBody(true, true);
+			yellow3.disableBody(true, true);
+			red3.disableBody(true, true);
+			score += 10;
+			scoreText.setText('Puntuación: ' + score);
+		}
+	}
+	this.physics.add.overlap(metralleta1Bullets, pesquero3, impactometralletapesquero3, null, this);
+	this.physics.add.overlap(metralleta2Bullets, pesquero3, impactometralletapesquero3, null, this);
+
+	function impactometralletapesquero4 (balametralleta, pesquero4)
+	{	
+		energiaPesquero4--;
+		balametralleta.kill();
+		if (energiaPesquero4 <= 0)
+		{
+			boom = this.add.sprite(pesquero4.x, pesquero4.y, 'explosion');
+			boom.anims.play('explode');
+			pesquero4.disableBody(true, true);
+			green4.disableBody(true, true);
+			yellow4.disableBody(true, true);
+			red4.disableBody(true, true);
+			score += 10;
+			scoreText.setText('Puntuación: ' + score);
+		}
+	}
+	this.physics.add.overlap(metralleta1Bullets, pesquero4, impactometralletapesquero4, null, this);
+	this.physics.add.overlap(metralleta2Bullets, pesquero4, impactometralletapesquero4, null, this);
+
+	
+	}
 
 function formatTime(seconds){
     // Minutes
@@ -373,6 +512,8 @@ function avisoAPesquero1 (barco, barco2, lancha, helicoptero, pesquero1)
 
 
 
+
+
 	
 function update (time,delta)
 {
@@ -385,16 +526,7 @@ function update (time,delta)
 	// movimientos
 	if (opv1)
 	{
-		barco2.setAcceleration(0);
-		barco2.setAngularVelocity(0);
-		helicoptero.setAcceleration(0);
-		helicoptero.setAngularVelocity(0);
-		helicoptero.setX(barco.x);
-		helicoptero.setY(barco.y);
-		lancha.setAcceleration(0);
-		lancha.setAngularVelocity(0);
-		lancha.setX(barco.x);
-		lancha.setY(barco.y);
+		
 		graphics.lineStyle(2, 0xffff00);
 		graphics.strokeCircleShape(radarBarco);
 		radarBarco.setPosition(barco.x, barco.y);
@@ -402,10 +534,7 @@ function update (time,delta)
 			
 		if (cursors.up.isDown)
 		{
-			this.physics.velocityFromRotation(barco.rotation, 20, barco.body.acceleration);
-			this.physics.velocityFromRotation(helicoptero.rotation, 20, helicoptero.body.acceleration);
-			this.physics.velocityFromRotation(lancha.rotation, 20, lancha.body.acceleration);
-			
+			this.physics.velocityFromRotation(barco.rotation, 20, barco.body.acceleration);	
 		}
 		else
 		{
@@ -415,28 +544,25 @@ function update (time,delta)
 		if (cursors.left.isDown)
 		{
 			barco.setAngularVelocity(-20);
-			helicoptero.setAngularVelocity(-20);
-			lancha.setAngularVelocity(-20);
+			
 		}
 		else if (cursors.right.isDown)
-		{
+			{
 			barco.setAngularVelocity(20);
-			helicoptero.setAngularVelocity(20);
-			lancha.setAngularVelocity(20);
-		}
-		else
-		{
+			
+			}
+			else
+			{
 			barco.setAngularVelocity(0);
-			helicoptero.setAngularVelocity(0);
-			lancha.setAngularVelocity(0);
-		}
-	if(Phaser.Input.Keyboard.JustDown(teclaDisparo)){
-		//if (fireButton.isDown)
-		//{
-        weapon.fire();
+			
+			}
+		if(Phaser.Input.Keyboard.JustDown(teclaDisparo))
+		{
+			weapon.fire();
 		}
 
-	if(Phaser.Input.Keyboard.JustDown(teclametralleta)){
+	if(Phaser.Input.Keyboard.JustDown(teclametralleta))
+	{
 		//if (fireButton.isDown)
 		//{
         metralleta1.fire();
@@ -449,16 +575,6 @@ function update (time,delta)
 	
 	if (opv2)
 	{
-		barco.setAcceleration(0);
-		barco.setAngularVelocity(0);
-		helicoptero.setAcceleration(0);
-		helicoptero.setAngularVelocity(0);
-		helicoptero.setX(barco.x);
-		helicoptero.setY(barco.y);
-		lancha.setAcceleration(0);
-		lancha.setAngularVelocity(0);
-		lancha.setX(barco.x);
-		lancha.setY(barco.y);
 		graphics.lineStyle(2, 0xffff00);
 		graphics.strokeCircleShape(radarBarco2);
 		radarBarco2.setPosition(barco2.x, barco2.y);
@@ -495,14 +611,6 @@ function update (time,delta)
 	
 	if (lanchahabilitada)
 	{
-		barco.setAcceleration(0);
-		barco.setAngularVelocity(0);
-		barco2.setAcceleration(0);
-		barco2.setAngularVelocity(0);
-		helicoptero.setAcceleration(0);
-		helicoptero.setAngularVelocity(0);
-		helicoptero.setX(barco.x);
-		helicoptero.setY(barco.y);
 		graphics.lineStyle(2, 0xffff00);
 		graphics.strokeCircleShape(radarLancha);
 		radarLancha.setPosition(lancha.x, lancha.y);
@@ -534,14 +642,7 @@ function update (time,delta)
 	
 	if (helicopterohabilitado)
 	{
-		barco.setAcceleration(0);
-		barco.setAngularVelocity(0);
-		barco2.setAcceleration(0);
-		barco2.setAngularVelocity(0);
-		lancha.setAcceleration(0);
-		lancha.setAngularVelocity(0);
-		lancha.setX(barco.x);
-		lancha.setY(barco.y);
+			
 		graphics.lineStyle(2, 0xffff00);
 		graphics.strokeCircleShape(radarHelicoptero);
 		radarHelicoptero.setPosition(helicoptero.x, helicoptero.y);
@@ -570,6 +671,43 @@ function update (time,delta)
 		}
 	
 	}
+	
+	
+	if (!opv1)
+	{
+		barco.setAcceleration(0);
+		barco.setAngularVelocity(0);
+	}
+	
+	if (!opv2)
+	{
+		barco2.setAcceleration(0);
+		barco2.setAngularVelocity(0);
+	}
+	
+	if (!lanchahabilitada)
+	{
+		lancha.setAcceleration(0);
+		lancha.setAngularVelocity(0);
+		lancha.setX(barco.x);
+		lancha.setY(barco.y);
+		lancha.setAngle (barco.angle);
+		lancha.setRotation (barco.rotation);
+	}
+	
+	
+	if (!helicopterohabilitado)
+	{
+		helicoptero.setAcceleration(0);
+		helicoptero.setAngularVelocity(0);
+		helicoptero.setX(barco.x);
+		helicoptero.setY(barco.y);
+		helicoptero.setAngle (barco.angle);
+		helicoptero.setRotation (barco.rotation);
+	}
+	
+	
+	
 	
    //text.setText('Speed: ' + barco.body.speed);
 
@@ -608,11 +746,6 @@ function update (time,delta)
 		yellow1.disableBody (true, true);
 
 	
-	
-	
-	
-	
-	
 		
 	text1.setText([
         'Sprite Rotation',
@@ -640,148 +773,6 @@ function update (time,delta)
     ]);
 	}
 	
-	function impactobala1 (bullet, pesquero1)
-	{
-		boom = this.add.sprite(pesquero1.x, pesquero1.y, 'explosion');
-		boom.anims.play('explode');
-		pesquero1.disableBody(true, true);
-		green1.disableBody(true, true);
-		yellow1.disableBody(true, true);
-		red1.disableBody(true, true);
-		bullet.kill();
-		score += 10;
-		scoreText.setText('Puntuación: ' + score);
-	}
-	this.physics.add.overlap(weaponBullets, pesquero1, impactobala1, null, this);
-	
-	
-	function impactobala2 (bullet, pesquero2)
-	{
-			
-		boom = this.add.sprite(pesquero2.x, pesquero2.y, 'explosion');
-		boom.anims.play('explode');
-		pesquero2.disableBody(true, true);
-		green2.disableBody(true, true);
-		yellow2.disableBody(true, true);
-		red2.disableBody(true, true);
-		bullet.kill();
-		score += 10;
-		scoreText.setText('Puntuación: ' + score);
-				
-	}
-	this.physics.add.overlap(weaponBullets, pesquero2, impactobala2, null, this);
-	
-	function impactobala3 (bullet, pesquero3)
-	{
-			
-		boom = this.add.sprite(pesquero3.x, pesquero3.y, 'explosion');
-		boom.anims.play('explode');
-		pesquero3.disableBody(true, true);
-		green3.disableBody(true, true);
-		yellow3.disableBody(true, true);
-		red3.disableBody(true, true);
-		bullet.kill();
-		score += 10;
-		scoreText.setText('Puntuación: ' + score);
-				
-	}
-	this.physics.add.overlap(weaponBullets, pesquero3, impactobala3, null, this);
-
-	function impactobala4 (bullet, pesquero4)
-	{
-			
-		boom = this.add.sprite(pesquero4.x, pesquero4.y, 'explosion');
-		boom.anims.play('explode');
-		pesquero4.disableBody(true, true);
-		green4.disableBody(true, true);
-		yellow4.disableBody(true, true);
-		red4.disableBody(true, true);
-		bullet.kill();
-		score += 10;
-		scoreText.setText('Puntuación: ' + score);
-				
-	}
-	this.physics.add.overlap(weaponBullets, pesquero4, impactobala4, null, this);
-
-	
-	
-	
-	function impactometralletapesquero1 (balametralleta, pesquero1)
-	{	
-		energiaPesquero1--;
-		balametralleta.kill();
-		if (energiaPesquero1 <= 0)
-		{
-			boom = this.add.sprite(pesquero1.x, pesquero1.y, 'explosion');
-			boom.anims.play('explode');
-			pesquero1.disableBody(true, true);
-			green1.disableBody(true, true);
-			yellow1.disableBody(true, true);
-			red1.disableBody(true, true);
-			score += 10;
-			scoreText.setText('Puntuación: ' + score);
-		}
-	}
-	this.physics.add.overlap(metralleta1Bullets, pesquero1, impactometralletapesquero1, null, this);
-	this.physics.add.overlap(metralleta2Bullets, pesquero1, impactometralletapesquero1, null, this);
-	textEnergia1.setText('Energia: ' + energiaPesquero1);
-
-		function impactometralletapesquero2 (balametralleta, pesquero2)
-	{	
-		energiaPesquero2--;
-		balametralleta.kill();
-		if (energiaPesquero2 <= 0)
-		{
-			boom = this.add.sprite(pesquero2.x, pesquero2.y, 'explosion');
-			boom.anims.play('explode');
-			pesquero2.disableBody(true, true);
-			green2.disableBody(true, true);
-			yellow2.disableBody(true, true);
-			red2.disableBody(true, true);
-			score += 10;
-			scoreText.setText('Puntuación: ' + score);
-		}
-	}
-	this.physics.add.overlap(metralleta1Bullets, pesquero2, impactometralletapesquero2, null, this);
-	this.physics.add.overlap(metralleta2Bullets, pesquero2, impactometralletapesquero2, null, this);
-	
-		function impactometralletapesquero3 (balametralleta, pesquero3)
-	{	
-		energiaPesquero3--;
-		balametralleta.kill();
-		if (energiaPesquero3 <= 0)
-		{
-			boom = this.add.sprite(pesquero3.x, pesquero3.y, 'explosion');
-			boom.anims.play('explode');
-			pesquero3.disableBody(true, true);
-			green3.disableBody(true, true);
-			yellow3.disableBody(true, true);
-			red3.disableBody(true, true);
-			score += 10;
-			scoreText.setText('Puntuación: ' + score);
-		}
-	}
-	this.physics.add.overlap(metralleta1Bullets, pesquero3, impactometralletapesquero3, null, this);
-	this.physics.add.overlap(metralleta2Bullets, pesquero3, impactometralletapesquero3, null, this);
-
-		function impactometralletapesquero4 (balametralleta, pesquero4)
-	{	
-		energiaPesquero4--;
-		balametralleta.kill();
-		if (energiaPesquero4 <= 0)
-		{
-			boom = this.add.sprite(pesquero4.x, pesquero4.y, 'explosion');
-			boom.anims.play('explode');
-			pesquero4.disableBody(true, true);
-			green4.disableBody(true, true);
-			yellow4.disableBody(true, true);
-			red4.disableBody(true, true);
-			score += 10;
-			scoreText.setText('Puntuación: ' + score);
-		}
-	}
-	this.physics.add.overlap(metralleta1Bullets, pesquero4, impactometralletapesquero4, null, this);
-	this.physics.add.overlap(metralleta2Bullets, pesquero4, impactometralletapesquero4, null, this);
 	
 }
 

@@ -1,0 +1,99 @@
+<!doctype html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8" />
+    <title>Making your first Phaser 3 Game - Part 8</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.22.0/dist/phaser.js"></script>
+	<script src="WeaponPlugin.js"></script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<script type="text/javascript">
+var configHoriz = {
+		type: Phaser.AUTO,
+		parent: 'vista_lateral',
+		backgroundColor: '#000000',
+		physics: {
+			default: 'arcade',
+			arcade: {
+				debug: false
+			}
+		},
+		width: 1360,
+		height: 650,
+		scene: {
+			preload: preload,
+			create: create,
+			update: update
+		}
+};
+
+
+var x;
+var y;
+var incl;
+var angulo;
+
+var game = new Phaser.Game(configHoriz);
+
+
+function preload ()
+{
+this.load.image('vista_lateral', 'recursos/lateral.png');
+this.load.image('costado1', 'recursos/costado1.png');
+this.load.image('CostadoLejos', 'recursos/CostadoLejos.png');
+this.load.image('FrenteArmada', 'recursos/FrenteArmada.png');
+this.load.image('inclinadoColaCosta', 'recursos/inclinadoColaCosta.png');
+this.load.image('inclinadoColaFrente', 'recursos/inclinadoColaFrente.png');
+this.load.image('inclinadoFrenteCosta', 'recursos/inclinadoFrenteCosta.png');
+
+
+}
+
+
+function create (){
+
+this.add.image(400, 300, 'vista_lateral');
+}
+
+
+
+function update (){
+
+x=1300;
+angulo=-100;
+incl=-0,60;
+
+if((x>=0&&x<=450)&&(angulo>=-67&&angulo<-10)&&(incl>=-0,78&&incl<=-0,39)){
+
+this.add.image(600, 570, 'inclinadoColaFrente');
+
+}
+
+if((x>=1200)&&(angulo>=-112&&angulo<-68)&&(incl>=-1,57&&incl<=-1,17)){
+
+this.add.image(1000, 530, 'CostadoLejos');
+
+}
+
+
+if((x>=0&&x<=450)&&(angulo>=-157&&angulo<157)&&(incl>=2,7&&incl<=-2,74)){
+
+this.add.image(100, 530, 'FrenteArmada');
+
+}
+
+}
+
+
+	</script>
+
+</body>
+</html>

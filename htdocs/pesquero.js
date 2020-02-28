@@ -55,6 +55,7 @@ function preload ()
 	this.load.image('pesquero1', 'recursos/pesquero1.png');
 	this.load.image('pesquero2', 'recursos/pesquero2.png');
 	this.load.image('bullet', 'recursos/shmup-bullet.png');
+	this.load.image('balametralleta', 'recursos/balametralleta.png');
 	this.load.image('green', 'recursos/green.png');
 	this.load.image('yellow', 'recursos/yellow.png');
 	this.load.image('red', 'recursos/red.png');
@@ -151,9 +152,15 @@ var explotar = {
 
     this.anims.create(explotar);
 
+	energiaPesquero1 = 10;
+	energiaPesquero2 = 10;
+	energiaPesquero3 = 10;
+	energiaPesquero4 = 10;
+
 	
 	
-	
+	//textCantPeces = this.add.text(600, 60, 'Peces: ' + cantPeces , {  fontSize: '20px', fill: '#000' });
+	textEnergia1 = this.add.text(600, 120, 'Energia: ' + energiaPesquero1 , {  fontSize: '20px', fill: '#000' });
 	
 	
 //	this.initialTime = 150; // 2:30 in seconds
@@ -164,27 +171,41 @@ var explotar = {
     // Each 1000 ms call onEvent
   //  timedEvent = this.time.addEvent({ delay: 1000, callback: onEvent, callbackScope: this, loop: true });
 	
-	
 	//  Creates 30 bullets, using the 'bullet' graphic
     weapon = this.add.weapon(30, 'bullet');
-
+	
+	//  Creates 30 bullets, using the 'bullet' graphic
+    metralleta1 = this.add.weapon(30, 'balametralleta');
+	metralleta2 = this.add.weapon(30, 'balametralleta');
+	
     //  The bullet will be automatically killed when it leaves the world bounds
     // weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
 
     //  The speed at which the bullet is fired
-   weapon.bulletSpeed = 100;
-
-    //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+	weapon.bulletSpeed = 100;
+	metralleta1.bulletSpeed = 500;
+	metralleta2.bulletSpeed = 500;
+    
+	//  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
     weapon.fireRate = 1000;
+	metralleta1.fireRate = 100;
+	metralleta2.fireRate = 100;
 	
 	weaponBullets = weapon.bullets;
+	metralleta1Bullets = metralleta1.bullets;
+	metralleta2Bullets = metralleta2.bullets;
 	
     //  Tell the Weapon to track the 'player' Sprite
     //  With no offsets from the position
     //  But the 'true' argument tells the weapon to track sprite rotation
     weapon.trackSprite(barco, 0, 0, true);
+	metralleta1.trackSprite(barco, 0, 0, true);
+	metralleta2.trackSprite(barco2, 0, 0, true);
 
-    fireButton = this.input.keyboard.addKey('m');
+	
+	
+	
+	
 	
 	barco.setCollideWorldBounds(true);<!-- colisiona con los limites del mundo-->
 	barco2.setCollideWorldBounds(true);<!-- colisiona con los limites del mundo-->
@@ -381,14 +402,7 @@ function update (time,delta)
 	
 	
 	if (pesquero1Habilitado)
-	{
-		pesquero2.setAcceleration(0);
-		pesquero2.setAngularVelocity(0);
-		pesquero3.setAcceleration(0);
-		pesquero3.setAngularVelocity(0);
-		pesquero4.setAcceleration(0);
-		pesquero4.setAngularVelocity(0);
-			
+	{			
 		if (cursors.up.isDown)
 		{
 			this.physics.velocityFromRotation(pesquero1.rotation, 20, pesquero1.body.acceleration);
@@ -415,13 +429,6 @@ function update (time,delta)
 	
 	if (pesquero2Habilitado)
 	{
-		pesquero1.setAcceleration(0);
-		pesquero1.setAngularVelocity(0);
-		pesquero3.setAcceleration(0);
-		pesquero3.setAngularVelocity(0);
-		pesquero4.setAcceleration(0);
-		pesquero4.setAngularVelocity(0);
-			
 		if (cursors.up.isDown)
 		{
 			this.physics.velocityFromRotation(pesquero2.rotation, 20, pesquero2.body.acceleration);
@@ -448,13 +455,6 @@ function update (time,delta)
 	
 	if (pesquero3Habilitado)
 	{
-		pesquero2.setAcceleration(0);
-		pesquero2.setAngularVelocity(0);
-		pesquero1.setAcceleration(0);
-		pesquero1.setAngularVelocity(0);
-		pesquero4.setAcceleration(0);
-		pesquero4.setAngularVelocity(0);
-			
 		if (cursors.up.isDown)
 		{
 			this.physics.velocityFromRotation(pesquero3.rotation, 20, pesquero3.body.acceleration);
@@ -480,14 +480,7 @@ function update (time,delta)
 	}
 	
 	if (pesquero4Habilitado)
-	{
-		pesquero2.setAcceleration(0);
-		pesquero2.setAngularVelocity(0);
-		pesquero3.setAcceleration(0);
-		pesquero3.setAngularVelocity(0);
-		pesquero1.setAcceleration(0);
-		pesquero1.setAngularVelocity(0);
-			
+	{			
 		if (cursors.up.isDown)
 		{
 			this.physics.velocityFromRotation(pesquero4.rotation, 20, pesquero4.body.acceleration);
@@ -510,6 +503,30 @@ function update (time,delta)
 		{
 			pesquero4.setAngularVelocity(0);
 		}
+	}
+	
+	if (!pesquero1Habilitado)
+	{
+		pesquero1.setAcceleration(0);
+		pesquero1.setAngularVelocity(0);	
+	}
+	
+	if (!pesquero2Habilitado)
+	{
+		pesquero2.setAcceleration(0);
+		pesquero2.setAngularVelocity(0);	
+	}
+	
+	if (!pesquero3Habilitado)
+	{
+		pesquero3.setAcceleration(0);
+		pesquero3.setAngularVelocity(0);	
+	}
+	
+	if (!pesquero4Habilitado)
+	{
+		pesquero4.setAcceleration(0);
+		pesquero4.setAngularVelocity(0);	
 	}
 	
    //text.setText('Speed: ' + barco.body.speed);
@@ -569,6 +586,8 @@ function update (time,delta)
         'fuera de rango ' + (Math.sqrt(Math.pow((pesquero1.x - barco.x),2) + Math.pow((pesquero1.y - barco.y),2))).toFixed(2)
     ]);
 	}
+	
+
 	
 	
 }
